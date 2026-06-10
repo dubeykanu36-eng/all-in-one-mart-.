@@ -1,0 +1,103 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All In One Mart</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Basic styling fallback to make sure things look neat if your css/style.css fails to load */
+        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+        nav a { margin-right: 15px; text-decoration: none; color: #007bff; }
+        .hero { background: #f4f4f4; padding: 20px; margin: 20px 0; border-radius: 5px; }
+        .checkout-section { margin-top: 30px; max-width: 400px; }
+        .checkout-section input { display: block; width: 100%; margin-bottom: 10px; padding: 8px; box-sizing: border-box; }
+        .checkout-section button { background: #28a745; color: white; border: none; padding: 10px 15px; cursor: pointer; width: 100%; font-size: 16px; }
+        .checkout-section button:hover { background: #218838; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>All In One Mart</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="products.html">Products</a>
+            <a href="cart.html">Cart</a>
+            <a href="login.html">Login</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h2>Welcome to All In One Mart</h2>
+        <p>Your one-stop shopping destination.</p>
+    </section>
+
+    <div class="checkout-section">
+        <h2>Checkout</h2>
+        <input type="text" placeholder="Full Name">
+        <input type="text" placeholder="Address">
+        <input type="text" placeholder="Mobile Number">
+        <button id="payBtn">Pay Now</button>
+    </div>
+
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+
+    <script>
+        // Products Catalog Data Array
+        const products = [
+            { id: 1, name: "T-Shirt", price: 499 , image: "WhatsApp Image 2026-06-10 at 23.26.55.jpg" },
+            { id: 2, name: "Shoes", price: 1499 },
+            { id: 3, name: "Watch", price: 999 },
+            { id: 4, name: "Headphones", price: 1999 },
+            { id: 5, name: "Backpack", price: 799 },
+            { id: 6, name: "Power Bank", price: 1299 },
+            { id: 7, name: "Water Bottle", price: 299 },
+            { id: 8, name: "Hoodie", price: 899 },
+            { id: 9, name: "Sunglasses", price: 699 },
+            { id: 10, name: "Mobile Cover", price: 249 }
+        ];
+
+        // Function to Handle Adding Items to Cart Storage
+        function addToCart(id, name, price) {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            
+            cart.push({
+                id: id,
+                name: name,
+                price: price,
+                quantity: 1
+            });
+            
+            localStorage.setItem("cart", JSON.stringify(cart));
+            alert("Product Added");
+        }
+
+        // Razorpay Payment Gateway Integration Click Event
+        document.getElementById("payBtn").onclick = function(e) {
+            e.preventDefault(); // Prevents page from unexpected reloading behaviors
+
+            var options = {
+                // IMPORTANT: Replace this placeholder text with your actual Razorpay Key ID from Dashboard
+                "key": "YOUR_RAZORPAY_KEY", 
+                "amount": 100000, // Amount in currency subunits (100000 paise = 1000 INR)
+                "currency": "INR",
+                "name": "All In One Mart",
+                "description": "Order Payment",
+                "handler": function(response) {
+                    alert("Payment Successful");
+                    console.log("Razorpay Response Transaction ID:", response.razorpay_payment_id);
+                },
+                "theme": {
+                    "color": "#3399cc"
+                }
+            };
+
+            var rzp = new Razorpay(options);
+            rzp.open();
+        };
+    </script>
+
+</body>
+</html>
